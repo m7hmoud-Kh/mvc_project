@@ -13,7 +13,7 @@ class model
         $options = [
             //required
             'username' => 'root',
-            'database' => 'testbark',
+            'database' => 'mvc_porject',
             //optional
             'password' => '',
             'type' => 'mysql',
