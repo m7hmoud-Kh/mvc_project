@@ -7,7 +7,7 @@ define("CONTROLLERS",APP.DS."controllers".DS);
 define("CORE",APP.DS."core".DS);
 define("MODELS",APP.DS."models".DS);
 define("VIEWS",APP.DS."views".DS);
-define('DOMAIN_NAME',"http://mvc.test"."/");
+define('DOMAIN_NAME',"http://mvc.mah"."/");
 define("PATH",DOMAIN_NAME."front"."/");
 define("PATH_BACK",DOMAIN_NAME."backend"."/");
 require_once("../vendor/autoload.php");

@@ -29,7 +29,7 @@ require_once("nav.php");
                     foreach ($search as $ser) {
                     ?>
                         <div class="col-md-6 col-xl-4 mb-5">
-                            <a class="card post-preview lift h-100" href="<?= DOMAIN_NAME ?>\view_post\<?= $ser->post_id ?>"><img class="card-img-top" src="<?= PATH_BACK ?>\img_upload\<?= $ser->post_photo ?>" alt="..." />
+                            <a class="card post-preview lift h-100" href="<?= DOMAIN_NAME ?>home\view_post\<?= $ser->post_id ?>"><img class="card-img-top" src="<?= PATH_BACK ?>\img_upload\<?= $ser->post_photo ?>" alt="..." />
                                 <div class="card-body">
                                     <h5 class="card-title"><?= $ser->post_title ?></h5>
                                     <p class="card-text"><?= substr($ser->post_details, 0, 25) . "........" ?></p>
