@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2021 at 04:59 PM
+-- Generation Time: Jan 25, 2021 at 01:54 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.1
 
@@ -147,15 +147,15 @@ INSERT INTO `message` (`meg_id`, `meg_details`, `meg_status`, `meg_date`, `user_
 
 CREATE TABLE `posts` (
   `post_id` int(11) NOT NULL,
-  `post_title` varchar(50) NOT NULL,
-  `post_details` text NOT NULL,
-  `post_tag` varchar(255) NOT NULL,
+  `post_title` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `post_details` text CHARACTER SET utf8 NOT NULL,
+  `post_tag` varchar(255) CHARACTER SET utf8 NOT NULL,
   `post_status` int(11) NOT NULL,
-  `post_photo` varchar(255) NOT NULL,
+  `post_photo` varchar(255) CHARACTER SET utf8 NOT NULL,
   `post_views` int(11) NOT NULL,
   `cat_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `post_date` varchar(55) NOT NULL
+  `post_date` varchar(55) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -234,43 +234,56 @@ INSERT INTO `user` (`user_id`, `user_frist`, `user_last`, `user_img`, `user_emai
 -- Indexes for table `categor`
 --
 ALTER TABLE `categor`
-  ADD PRIMARY KEY (`cat_id`);
+  ADD PRIMARY KEY (`cat_id`),
+  ADD UNIQUE KEY `cat_name` (`cat_name`),
+  ADD KEY `categor_ibfk_1` (`cat_user`);
 
 --
 -- Indexes for table `comment`
 --
 ALTER TABLE `comment`
-  ADD PRIMARY KEY (`com_id`);
+  ADD PRIMARY KEY (`com_id`),
+  ADD KEY `post_id` (`post_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `com_not`
 --
 ALTER TABLE `com_not`
-  ADD PRIMARY KEY (`com_not_id`);
+  ADD PRIMARY KEY (`com_not_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `com_id` (`com_id`);
 
 --
 -- Indexes for table `meg_not`
 --
 ALTER TABLE `meg_not`
-  ADD PRIMARY KEY (`meg_not_id`);
+  ADD PRIMARY KEY (`meg_not_id`),
+  ADD KEY `meg_id` (`meg_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `message`
 --
 ALTER TABLE `message`
-  ADD PRIMARY KEY (`meg_id`);
+  ADD PRIMARY KEY (`meg_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `posts`
 --
 ALTER TABLE `posts`
-  ADD PRIMARY KEY (`post_id`);
+  ADD PRIMARY KEY (`post_id`),
+  ADD KEY `cat_id` (`cat_id`),
+  ADD KEY `posts_ibfk_2` (`user_id`);
 
 --
 -- Indexes for table `reply`
 --
 ALTER TABLE `reply`
-  ADD PRIMARY KEY (`re_id`);
+  ADD PRIMARY KEY (`re_id`),
+  ADD KEY `meg_id` (`meg_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `user`
@@ -287,7 +300,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `categor`
 --
 ALTER TABLE `categor`
-  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `comment`
@@ -317,7 +330,7 @@ ALTER TABLE `message`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `reply`
@@ -329,7 +342,58 @@ ALTER TABLE `reply`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `categor`
+--
+ALTER TABLE `categor`
+  ADD CONSTRAINT `categor_ibfk_1` FOREIGN KEY (`cat_user`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `comment`
+--
+ALTER TABLE `comment`
+  ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `com_not`
+--
+ALTER TABLE `com_not`
+  ADD CONSTRAINT `com_not_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `com_not_ibfk_2` FOREIGN KEY (`com_id`) REFERENCES `comment` (`com_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `meg_not`
+--
+ALTER TABLE `meg_not`
+  ADD CONSTRAINT `meg_not_ibfk_1` FOREIGN KEY (`meg_id`) REFERENCES `message` (`meg_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `meg_not_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `message`
+--
+ALTER TABLE `message`
+  ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `posts`
+--
+ALTER TABLE `posts`
+  ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `categor` (`cat_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `reply`
+--
+ALTER TABLE `reply`
+  ADD CONSTRAINT `reply_ibfk_1` FOREIGN KEY (`meg_id`) REFERENCES `message` (`meg_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `reply_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
